@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('status_drivers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('drivers_id')->nullable()->constrained('drivers');
+            $table->foreignId('status_id')->nullable()->constrained('status');
             $table->timestamps();
         });
     }

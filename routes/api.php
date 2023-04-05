@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Api\V1\GoogleAuthController as GoogleAuth;
-use App\Http\Controllers\Api\V1\EstadoController as Estado;
+use App\Http\Controllers\Api\V1\StatusController as Status;
+use App\Http\Controllers\Api\V1\AuthController as Auth;
+use App\Http\Controllers\Api\V1\StatusDriversController as StatusDriver;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,16 +22,25 @@ use App\Http\Controllers\Api\V1\EstadoController as Estado;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::get('login', [GoogleAuth::class,'redirectToProvider']);
-Route::middleware('web')->get('login', [GoogleAuth::class, 'redirectToProvider']);
+// Rutas para el chofer
+Route::post('/driver/login', [Auth::class, 'login']);
+Route::post('/driver/register', [Auth::class, 'register']);
 
-// Route::get('login/callback', [GoogleAuth::class,'handleProviderCallback']);
+// Rutas para el psajero
+Route::middleware('web')->get('login', [GoogleAuth::class, 'redirectToProvider']);
 Route::middleware('web')->get('/google-callback', [GoogleAuth::class, 'handleProviderCallback']);
 
+
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/estados', [Estado::class, 'index']);
-    Route::get('/estados/{id}', [Estado::class, 'show']);
-    Route::post('/estados', [Estado::class, 'store']);
-    Route::put('/estados/{id}', [Estado::class, 'update']);
-    Route::delete('/estados/{id}', [Estado::class, 'destroy']);
+    Route::get('/status', [Status::class, 'index']);
+    Route::get('/status/{id}', [Status::class, 'show']);
+    Route::post('/status', [Status::class, 'store']);
+    Route::put('/status/{id}', [Status::class, 'update']);
+    Route::delete('/status/{id}', [Status::class, 'destroy']);
 });
+
+Route::middleware('auth:sanctum:driver')->group(function () {
+    Route::post('/driver/update-status', [StatusDriver::class, 'updateStatus']);
+});
+// crear unas rutas protegidas del estado para el token de drivers y otras para el token de users
