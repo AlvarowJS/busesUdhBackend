@@ -29,7 +29,7 @@ Route::post('/driver/register', [Auth::class, 'register']);
 // Rutas para el psajero
 Route::middleware('web')->get('login', [GoogleAuth::class, 'redirectToProvider']);
 Route::middleware('web')->get('/google-callback', [GoogleAuth::class, 'handleProviderCallback']);
-
+Route::post('/login-user', [GoogleAuth::class, 'loginWithCredentials']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
