@@ -48,23 +48,23 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        try {
+            // Crear un nuevo conductor con los datos proporcionados.
+            $driver = Driver::create([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'dni' => $request->dni,
+            ]);
 
-        // $data = $request->validate([
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:drivers'],
-        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
-        // ]);
+            // Generar un token de acceso para el conductor.
+            $token = $driver->createToken('driver_token')->plainTextToken;
 
-        // Crear un nuevo conductor con los datos proporcionados.
-        $driver = Driver::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            return response()->json(['token' => $token], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al registrar el conductor.'], 500);
 
-        // Generar un token de acceso para el conductor.
-        $token = $driver->createToken('driver_token')->plainTextToken;
-
-        return response()->json(['token' => $token], 201);
+        }
     }
 }

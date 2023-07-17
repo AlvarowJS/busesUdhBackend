@@ -6,7 +6,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Api\V1\GoogleAuthController as GoogleAuth;
 use App\Http\Controllers\Api\V1\StatusController as Status;
 use App\Http\Controllers\Api\V1\AuthController as Auth;
-use App\Http\Controllers\Api\V1\StatusDriversController as StatusDriver;
+use App\Http\Controllers\Api\V1\BuseController as Buses;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum:driver')->group(function () {
-    Route::post('/driver/update-status', [StatusDriver::class, 'updateStatus']);
+    // Route::post('/driver/update-status', [StatusDriver::class, 'updateStatus']);
+    Route::post('/driver/crear-bus', [Buses::class, 'store']);
+    Route::get('/driver/mostrar-bus', [Buses::class, 'index']);
 });
 // crear unas rutas protegidas del estado para el token de drivers y otras para el token de users

@@ -13,7 +13,11 @@ class Driver extends Authenticatable
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'email',
+        'password',
+        'nombres',
+        'apellidos',
+        'dni',
     ];
 
     protected $hidden = [

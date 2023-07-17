@@ -12,9 +12,11 @@ return new class extends Migration {
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('nombres', 100);
+            $table->string('apellidos', 150);
+            $table->char('dni', 8);
             $table->rememberToken();
             $table->timestamps();
         });
