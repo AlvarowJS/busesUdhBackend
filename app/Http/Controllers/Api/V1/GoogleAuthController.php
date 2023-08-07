@@ -23,12 +23,17 @@ class GoogleAuthController extends Controller
             'password' => 'required|string'
         ]);
         $credentials = request(['email', 'password']);
-
         if (Auth::guard('users')->attempt($credentials)) {
             $user = User::where('email', $request->email)->first();
             $token = $user->createToken('user_token')->plainTextToken;
 
-            return response()->json(['token' => $token]);
+            return response()->json([
+                'token' => $token,
+                'nombre' => $user->name,
+                'email' => $user->email,
+                'codigo' => $user->codigo,
+                'avatar' => $user->avatar,
+            ]);
         }
         if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'No Autorizado'], 401);

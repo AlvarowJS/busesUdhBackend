@@ -54,6 +54,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'drivers',
         ],
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*
