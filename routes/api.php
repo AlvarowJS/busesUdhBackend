@@ -32,7 +32,9 @@ Route::middleware('web')->get('/google-callback', [GoogleAuth::class, 'handlePro
 Route::post('/login-user', [GoogleAuth::class, 'loginWithCredentials']);
 
 
+
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth', [GoogleAuth::class, 'authToken']);
     Route::get('/status', [Status::class, 'index']);
     Route::get('/status/{id}', [Status::class, 'show']);
     Route::post('/status', [Status::class, 'store']);

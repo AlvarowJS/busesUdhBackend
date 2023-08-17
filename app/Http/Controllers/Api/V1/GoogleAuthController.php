@@ -16,6 +16,13 @@ class GoogleAuthController extends Controller
     {
         return Auth::guard('users');
     }
+    public function authToken(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $user = Auth::user();
+        $user->token = $token;
+        return $user;
+    }
     public function loginWithCredentials(Request $request)
     {
         $request->validate([
@@ -29,7 +36,7 @@ class GoogleAuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-                'nombre' => $user->name,
+                'name' => $user->name,
                 'email' => $user->email,
                 'codigo' => $user->codigo,
                 'avatar' => $user->avatar,
@@ -64,6 +71,13 @@ class GoogleAuthController extends Controller
             ]);
         } else {
             $email = $user->email;
+            $domainToCheck = "@udh.edu.pe";
+
+            if (strpos($email, $domainToCheck) !== false) {
+                return "El correo electrónico es válido para el dominio '@udh.edu.pe'";
+            } else {
+                return "El correo electrónico no es válido para el dominio '@udh.edu.pe'";
+            }
             $codigo = substr($email, 0, strpos($email, '@'));
             $userNew = User::create([
                 'name' => $user->name,
