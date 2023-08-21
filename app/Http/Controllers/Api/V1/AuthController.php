@@ -35,7 +35,12 @@ class AuthController extends Controller
             $driver = Driver::where('email', $request->email)->first();
             $token = $driver->createToken('driver_token')->plainTextToken;
 
-            return response()->json(['token' => $token]);
+            return response()->json([
+                'token' => $token,
+                'nombres' => $driver->nombres,
+                'apellidos' => $driver->apellidos,
+                'table' => 'drivers'
+            ]);
         }
         if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'No Autorizado'], 401);

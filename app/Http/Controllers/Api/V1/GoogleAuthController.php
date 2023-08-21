@@ -20,7 +20,9 @@ class GoogleAuthController extends Controller
     {
         $token = $request->header('Authorization');
         $user = Auth::user();
+        $tableName = $user->getTable();
         $user->token = $token;
+        $user->table = $tableName;
         return $user;
     }
     public function loginWithCredentials(Request $request)
@@ -40,6 +42,7 @@ class GoogleAuthController extends Controller
                 'email' => $user->email,
                 'codigo' => $user->codigo,
                 'avatar' => $user->avatar,
+                'table' => 'users'
             ]);
         }
         if (!Auth::attempt($credentials)) {
@@ -74,27 +77,27 @@ class GoogleAuthController extends Controller
             $domainToCheck = "@udh.edu.pe";
 
             if (strpos($email, $domainToCheck) !== false) {
-                return "El correo electrónico es válido para el dominio '@udh.edu.pe'";
-            } else {
-                return "El correo electrónico no es válido para el dominio '@udh.edu.pe'";
-            }
-            $codigo = substr($email, 0, strpos($email, '@'));
-            $userNew = User::create([
-                'name' => $user->name,
-                'email' => $email,
-                'password' => Hash::make($codigo),
-                'codigo' => $codigo,
-                'avatar' => $user->avatar,
-                'external_id' => $user->id,
-                'external_auth' => 'google',
-            ]);
+                $codigo = substr($email, 0, strpos($email, '@'));
+                $userNew = User::create([
+                    'name' => $user->name,
+                    'email' => $email,
+                    'password' => Hash::make($codigo),
+                    'codigo' => $codigo,
+                    'avatar' => $user->avatar,
+                    'external_id' => $user->id,
+                    'external_auth' => 'google',
+                ]);
 
-            Auth::login($userNew);
-            $token = $userNew->createToken('Personal Access Token')->accessToken;
-            return response()->json([
-                'access_token' => $token,
-                'data' => $userNew
-            ]);
+                Auth::login($userNew);
+                $token = $userNew->createToken('Personal Access Token')->accessToken;
+                return response()->json([
+                    'access_token' => $token,
+                    'data' => $userNew
+                ]);
+            } else {
+                return "error";
+            }
+
         }
     }
 
