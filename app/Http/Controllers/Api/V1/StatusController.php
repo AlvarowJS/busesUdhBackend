@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Statu;
+use Illuminate\Support\Facades\Auth;
 
 class StatusController extends Controller
 {
-
+    public function updateStatus(Request $request)
+    {
+        $user = Auth::user();
+        return $user;
+    }
     public function index()
     {
         $statuss = Statu::all();

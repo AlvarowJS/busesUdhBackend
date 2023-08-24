@@ -36,15 +36,16 @@ Route::post('/login-user', [GoogleAuth::class, 'loginWithCredentials']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth', [GoogleAuth::class, 'authToken']);
     Route::get('/status', [Status::class, 'index']);
-    Route::get('/status/{id}', [Status::class, 'show']);
-    Route::post('/status', [Status::class, 'store']);
-    Route::put('/status/{id}', [Status::class, 'update']);
-    Route::delete('/status/{id}', [Status::class, 'destroy']);
+    // Route::get('/status/{id}', [Status::class, 'show']);
+    // Route::post('/status', [Status::class, 'store']);
+    // Route::put('/status/{id}', [Status::class, 'update']);
+    // Route::delete('/status/{id}', [Status::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum:driver')->group(function () {
-    // Route::post('/driver/update-status', [StatusDriver::class, 'updateStatus']);
+    Route::post('/driver/update-status', [Status::class, 'updateStatus']);
     Route::post('/driver/crear-bus', [Buses::class, 'store']);
     Route::get('/driver/mostrar-bus', [Buses::class, 'index']);
+    Route::post('/driver/asignar-bus', [Buses::class, 'asignarBus']);
 });
 // crear unas rutas protegidas del estado para el token de drivers y otras para el token de users

@@ -5,12 +5,37 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Buse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BuseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function asignarBus(Request $request)
+    {
+        $user = Auth::user();
+        $idBus = $request->id;
+        $idUser = $user->id;
+
+
+        $bus = Buse::find($idBus);
+        $bus->driver_id = $idUser;
+        $bus->save();
+
+        return response()->json($bus);
+    }
+    public function terminarBus(Request $request)
+    {
+        $user = Auth::user();
+        $idBus = $request->id;
+        // $idUser = $user->id;
+
+
+        $bus = Buse::find($idBus);
+        $bus->driver_id = null;
+        $bus->save();
+
+        return response()->json($bus);
+    }
     public function index()
     {
         $buses = Buse::all();
