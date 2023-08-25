@@ -16,25 +16,54 @@ class BuseController extends Controller
         $idBus = $request->id;
         $idUser = $user->id;
 
+        $busSearch = Buse::find($idBus);
+        $busSearchActual = $busSearch->driver_id;
 
-        $bus = Buse::find($idBus);
-        $bus->driver_id = $idUser;
-        $bus->save();
+        if ($idUser == $busSearchActual) {
+            return response()->json([
+                'error' => 'bus ya asignado'
+            ], 400);
+        } else {
+            $busList = Buse::all();
+            $dataDriver = collect($busList)->pluck('driver_id')->values()->toArray();
 
-        return response()->json($bus);
+            if (!in_array($idBus, $dataDriver, true)) {
+                $busSearch->driver_id = $idUser;
+                $busSearch->save();
+                return response()->json([
+                    'message' => 'bus asignado',
+                    'data' => $busSearch
+                ]);
+            } else {
+                return response()->json([
+                    'error' => 'bus no disponible'
+                ], 401);
+            }
+
+        }
     }
     public function terminarBus(Request $request)
     {
+
         $user = Auth::user();
+        $idUser = $user->id;
         $idBus = $request->id;
-        // $idUser = $user->id;
-
-
         $bus = Buse::find($idBus);
-        $bus->driver_id = null;
-        $bus->save();
 
-        return response()->json($bus);
+        if ($idUser == $idBus) {
+            $bus->driver_id = null;
+            $bus->save();
+            return response()->json([
+                'message' => 'Bus finalizado',
+                'data' => $bus
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'bus no pertenece al usuario'
+            ], 401);
+        }
+
+
     }
     public function index()
     {

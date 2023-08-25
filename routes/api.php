@@ -47,5 +47,6 @@ Route::middleware('auth:sanctum:driver')->group(function () {
     Route::post('/driver/crear-bus', [Buses::class, 'store']);
     Route::get('/driver/mostrar-bus', [Buses::class, 'index']);
     Route::post('/driver/asignar-bus', [Buses::class, 'asignarBus']);
+    Route::post('/driver/terminar-bus', [Buses::class, 'terminarBus']);
 });
 // crear unas rutas protegidas del estado para el token de drivers y otras para el token de users
