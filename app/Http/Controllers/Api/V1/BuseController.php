@@ -52,6 +52,7 @@ class BuseController extends Controller
 
         if ($idUser == $idBus) {
             $bus->driver_id = null;
+            $bus->statu_id = null;
             $bus->save();
             return response()->json([
                 'message' => 'Bus finalizado',

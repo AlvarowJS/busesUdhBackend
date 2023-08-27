@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum:driver')->group(function () {
     Route::post('/driver/update-status', [Status::class, 'updateStatus']);
+    Route::post('/driver/asignar-status', [Status::class, 'asignarEstado']);
     Route::post('/driver/crear-bus', [Buses::class, 'store']);
     Route::get('/driver/mostrar-bus', [Buses::class, 'index']);
     Route::post('/driver/asignar-bus', [Buses::class, 'asignarBus']);
