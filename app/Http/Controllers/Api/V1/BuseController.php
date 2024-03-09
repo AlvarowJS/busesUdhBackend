@@ -19,17 +19,21 @@ class BuseController extends Controller
         $busSearch = Buse::find($idBus);
         $busSearchActual = $busSearch->driver_id;
 
+        $busActual = Buse::where('driver_id', $idUser)->first();
+
         if ($idUser == $busSearchActual) {
             return response()->json([
                 'error' => 'bus ya asignado'
             ], 400);
         } else {
-            $busList = Buse::all();
-            $dataDriver = collect($busList)->pluck('driver_id')->values()->toArray();
-
-            if (!in_array($idBus, $dataDriver, true)) {
+            if ($busSearchActual == null) {
+                if ($busActual) {
+                    $busActual->driver_id = null;
+                    $busActual->save();
+                }
                 $busSearch->driver_id = $idUser;
                 $busSearch->save();
+
                 return response()->json([
                     'message' => 'bus asignado',
                     'data' => $busSearch
@@ -69,7 +73,12 @@ class BuseController extends Controller
     public function index()
     {
         $buses = Buse::all();
+        foreach ($buses as $bus) {
+            $bus->status = $bus->driver_id === null ? 'disponible' : 'ocupado';
+        }
+
         return response()->json($buses);
+
     }
 
     /**
