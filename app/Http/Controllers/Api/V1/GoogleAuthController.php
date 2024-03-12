@@ -55,7 +55,9 @@ class GoogleAuthController extends Controller
     }
     public function redirectToProvider()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->with(['prompt' => 'select_account'])
+            ->redirect();
     }
 
     public function handleProviderCallback()
@@ -97,8 +99,6 @@ class GoogleAuthController extends Controller
             } else {
                 return "error";
             }
-
         }
     }
-
 }
