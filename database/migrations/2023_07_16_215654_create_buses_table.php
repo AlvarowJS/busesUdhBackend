@@ -16,7 +16,6 @@ return new class extends Migration
             $table->char('numero',3);
             $table->char('placa',7);
             $table->boolean('activo')->nullable()->default(false);
-
             $table->foreignId('driver_id')->nullable()->constrained('drivers');
             $table->foreignId('statu_id')->nullable()->constrained('status');
             $table->timestamps();

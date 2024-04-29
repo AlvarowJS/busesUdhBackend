@@ -23,8 +23,8 @@ class BuseController extends Controller
 
         if ($idUser == $busSearchActual) {
             return response()->json([
-                'error' => 'bus ya asignado'
-            ], 400);
+                'success' => 'bus ya asignado'
+            ], 201);
         } else {
             if ($busSearchActual == null) {
                 if ($busActual) {
@@ -72,9 +72,12 @@ class BuseController extends Controller
     }
     public function index()
     {
+        $user = Auth::user();
+        $userActual = $user->id;
         $buses = Buse::all();
         foreach ($buses as $bus) {
             $bus->status = $bus->driver_id === null ? 'disponible' : 'ocupado';
+            $bus->id_user_actual = $userActual;
         }
 
         return response()->json($buses);
