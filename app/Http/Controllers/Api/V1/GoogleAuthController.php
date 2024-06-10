@@ -101,4 +101,65 @@ class GoogleAuthController extends Controller
             }
         }
     }
+
+    public function registroWithGoogle(Request $request)
+    {
+        $codigo = $request->email;
+        $division = explode("@", $codigo);
+        $codigo = $division[0];
+        $dominio = $division[1];
+        try {
+            if ($dominio != "udh.edu.pe") {
+                return response()->json([
+                    'error' => 'El usuario no esta permitido'
+                ], 401);
+            } else {
+                $existingUser = User::where('email', $request->email)->first();
+
+                if ($existingUser) {
+                    if ($existingUser->external_id == $request->id) {
+                        $token = $existingUser->createToken('access_token')->plainTextToken;
+                        return response()->json([
+                            // 'access_token' => $token,
+                            // 'data' => $existingUser
+                            'token' => $token,
+                            'name' => $existingUser->name,
+                            'email' => $existingUser->email,
+                            'codigo' => $existingUser->codigo,
+                            'avatar' => $existingUser->avatar,
+                            'table' => 'users'
+                        ], 200);
+                    } else {
+                        return response()->json([
+                            'errror' => 'El external id no coincide'
+                        ], 403);
+                    }
+                } else {
+                    $student = User::create([
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'password' => Hash::make($codigo),
+                        'codigo' => $codigo,
+                        'avatar' => $request->photo,
+                        'external_id' => $request->id,
+                        'external_auth' => 'google',
+                    ]);
+
+                    $token = $student->createToken('access_token')->plainTextToken;
+                    return response()->json([
+                        // 'access_token' => $token,
+                        // 'data' => $student
+                        'token' => $token,
+                        'name' => $student->name,
+                        'email' => $student->email,
+                        'codigo' => $student->codigo,
+                        'avatar' => $student->avatar,
+                        'table' => 'users'
+                    ], 201);
+                }
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrio un errror al registrar'], 500);
+        }
+    }
 }

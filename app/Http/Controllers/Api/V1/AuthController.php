@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Driver;
+use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
 
@@ -14,6 +15,16 @@ class AuthController extends Controller
 {
     // use AuthenticatesUsers, RegistersUsers;
 
+    public function logout(Request $request)
+    {
+        // Obtener el usuario autenticado
+        $user = $request->user();
+
+        // Revocar el token actual del usuario
+        $user->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Sesión cerrada con éxito'], 200);
+    }
     protected function guard()
     {
         return Auth::guard('drivers');
@@ -69,7 +80,6 @@ class AuthController extends Controller
             return response()->json(['token' => $token], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al registrar el conductor.'], 500);
-
         }
     }
 }

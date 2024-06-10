@@ -46,15 +46,19 @@ class BuseController extends Controller
 
         }
     }
-    public function terminarBus(Request $request)
+    public function terminarBus()
     {
 
         $user = Auth::user();
         $idUser = $user->id;
-        $idBus = $request->id;
+
+        $buse = Buse::where('driver_id', $idUser)->first();
+        
+        // return $buse->id;
+        $idBus = $buse->id;
         $bus = Buse::find($idBus);
 
-        if ($idUser == $idBus) {
+        if ($idUser == $buse->driver_id) {
             $bus->driver_id = null;
             $bus->statu_id = null;
             $bus->save();
@@ -69,6 +73,12 @@ class BuseController extends Controller
         }
 
 
+    }
+    public function mostrarBusesActivos()
+    {
+        $busesActivos = Buse::where('activo', 1)->get();
+
+        return response()->json($busesActivos);
     }
     public function index()
     {
