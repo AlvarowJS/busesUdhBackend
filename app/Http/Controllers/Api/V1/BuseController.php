@@ -65,7 +65,7 @@ class BuseController extends Controller
             return response()->json([
                 'message' => 'Bus finalizado',
                 'data' => $bus
-            ], 201);
+            ], 200);
         } else {
             return response()->json([
                 'error' => 'bus no pertenece al usuario'
@@ -87,7 +87,7 @@ class BuseController extends Controller
         $buses = Buse::all();
         foreach ($buses as $bus) {
             $bus->status = $bus->driver_id === null ? 'disponible' : 'ocupado';
-            $bus->id_user_actual = $userActual;
+            $bus->id_user_actual = $userActual == $bus->driver_id ? $bus->driver_id : null;
         }
 
         return response()->json($buses);
