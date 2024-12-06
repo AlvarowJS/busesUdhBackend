@@ -29,9 +29,11 @@ class BuseController extends Controller
             if ($busSearchActual == null) {
                 if ($busActual) {
                     $busActual->driver_id = null;
+                    $busActual->activo = false;
                     $busActual->save();
                 }
                 $busSearch->driver_id = $idUser;
+                $busSearch->activo = true;
                 $busSearch->save();
 
                 return response()->json([
@@ -61,6 +63,7 @@ class BuseController extends Controller
         if ($idUser == $buse->driver_id) {
             $bus->driver_id = null;
             $bus->statu_id = null;
+            $bus->activo = false;
             $bus->save();
             return response()->json([
                 'message' => 'Bus finalizado',
@@ -76,7 +79,7 @@ class BuseController extends Controller
     }
     public function mostrarBusesActivos()
     {
-        $busesActivos = Buse::where('activo', 1)->get();
+        $busesActivos = Buse::where('activo', true)->get();
 
         return response()->json($busesActivos);
     }

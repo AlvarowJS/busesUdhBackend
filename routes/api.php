@@ -36,6 +36,7 @@ Route::post('/google-register', [GoogleAuth::class, 'registroWithGoogle']);
 // Parederos:
 Route::apiResource('/paradero', Paradero::class);
 
+// Testers
 
 
 Route::middleware('auth:sanctum')->group(function () {
